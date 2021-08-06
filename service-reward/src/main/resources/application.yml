@@ -1,0 +1,47 @@
+server:
+  port: 8625
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://127.0.0.1:3306/take_out_food?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    username: root
+    password: 123456
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    publisher-returns: true
+    #  确认生产者消息已发送到交换机（Exchange）选择确认类型为交互
+    #  publisher-confirms: true 旧的jar写法
+    publisher-confirm-type: correlated
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          max-attempts: 5
+          initial-interval: 5000ms
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  type-aliases-package: scc.food.reward.entity
+  global-config:
+    db-config:
+      id-type: auto
+      field-strategy: not_null
+      table-underline: true
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      column-like: true
+  configuration:
+    #查询返回Map时设置值为null的字段也在结果集中
+    call-setters-on-nulls: true
+    #禁用缓存
+    cache-enabled: false
+    #map下划线转驼峰
+    map-underscore-to-camel-case: true
+
